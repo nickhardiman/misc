@@ -1,0 +1,16 @@
+---
+all:
+  children:
+    automationcontroller:
+      hosts:
+        aapcontrol.build.example.com: {}
+
+    automationhub:
+      hosts:
+        aaphub.build.example.com: {}
+
+    builder:
+      hosts:
+        dev.build.example.com: {}
+...
+

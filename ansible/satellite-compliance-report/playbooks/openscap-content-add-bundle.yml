@@ -1,0 +1,33 @@
+---
+- name: Add the bundled OpenSCAP content to Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+    # add default scap content
+    # https://github.com/sscheib/ansible_satellite/blob/main/20_satellite_openscap.yml#L219
+    #
+    - name: 'Enable default OpenSCAP content provided by Satellite'
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/api/v2/compliance/scap_contents/bulk_upload'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: 'POST'
+        body: |
+          {{
+            {
+              'type': 'default'
+            }
+          }}
+        force_basic_auth: true
+        body_format: 'json'
+      register: r_scap_content_default
+
+    - name: Display reply
+      ansible.builtin.debug:
+        var: r_scap_content_default
+

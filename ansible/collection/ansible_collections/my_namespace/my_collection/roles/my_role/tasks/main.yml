@@ -1,0 +1,6 @@
+---
+# tasks file for my_role
+- name: Say hello
+  debug:
+    msg: Hello
+

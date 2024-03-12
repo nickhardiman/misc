@@ -1,0 +1,47 @@
+---
+# this code based on 
+# https://github.com/sscheib/ansible_satellite/blob/main/20_satellite_openscap.yml
+# Satellite API guide
+# https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/api_guide/index
+# Satellite API resources
+# https://satellite.build.example.com/apidoc/v2.html
+#
+- name: Check OpenSCAP content in Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+        # similar CLI command is
+        # hammer scap-content list
+        - name: 'Get populated OpenSCAP contents of {{ satellite_fqdn }}'
+          ansible.builtin.uri:
+            url: '{{ sat_server_url }}/api/v2/compliance/scap_contents'
+            user: '{{ sat_username }}'
+            password: '{{ sat_password }}'
+            validate_certs: '{{ satellite_validate_certs }}'
+            method: 'GET'
+            force_basic_auth: true
+            body_format: 'json'
+          register: '__t_available_scap_contents'
+
+        - name: 'Ensure returned contents have the correct data type'
+          ansible.builtin.assert:
+            that:
+              - __t_available_scap_contents.json.results is defined
+              - __t_available_scap_contents.json.results is not string
+              - __t_available_scap_contents.json.results is not mapping
+              - __t_available_scap_contents.json.results is iterable
+
+        # similar CLI command is
+        # hammer scap-content info --title="Red Hat rhel9 default content"
+        - name: Display
+          ansible.builtin.debug:
+            msg: "original_filename: {{ item }}"
+          loop: "{{ __t_available_scap_contents['json']['results'] | map(attribute='original_filename')  }}"
+            #loop: "{{ q('ansible.builtin.subelements', __t_available_scap_contents['json']['results'], 'original_filename' }}"
+
+
+

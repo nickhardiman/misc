@@ -1,0 +1,2 @@
+openssl [platform:rpm]
+bind-utils [platform:rhel-8 platform:rhel-9]

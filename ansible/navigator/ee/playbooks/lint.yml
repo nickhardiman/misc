@@ -1,0 +1,18 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Static code analysis
+    ansible.builtin.shell:
+      cmd: ansible-lint --format json /runner/project/playbooks/files.yml > /tmp/lint.json || true 
+    register: r_lint
+    #ignore_errors: true
+    #failed_when: false
+  - name: Read file
+    ansible.builtin.set_fact:
+      lint_result: "{{ lookup('ansible.builtin.file', '/tmp/lint.json') | from_json }}"
+  - name: Display
+    ansible.builtin.debug:
+      var: lint_result
+      #var: r_lint
+      #var: r_lint[stdout_lines]
+

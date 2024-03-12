@@ -1,0 +1,22 @@
+# HTTP, auth
+sat_username: admin
+sat_password: Password;1
+satellite_fqdn: satellite.build.example.com
+sat_server_url: "https://{{ satellite_fqdn }}"
+satellite_validate_certs: true
+sat_organization: Default Organization
+
+# hosts, hostgroups
+#host_name: dev.build.example.com
+host_name: test.build.example.com
+host_group_name: hg-rhel-9
+host_subnet: sn-build-subnet
+
+# openscap, ansible
+sat_scap_foreman_role_name: 'theforeman.foreman_scap_client'
+sat_scap_foreman_role_vars:
+  foreman_scap_client_fetch_remote_resources:
+    value: true
+  foreman_scap_client_server:
+    value: "{{ satellite_fqdn }}"
+policy_name: p-rhel9-ansible

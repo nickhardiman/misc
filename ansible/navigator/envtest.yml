@@ -1,0 +1,26 @@
+# Set and get an environment variable
+# Setting is ok with environment:
+# Getting is ok with lookup('ansible.builtin.env', 'http_proxy')
+# Doing both is weird.
+# You have to gather facts and use ansible_env.
+#
+- name: Set and retrieve an env var
+  hosts: localhost
+  #gather_facts: true
+  gather_facts: false
+  environment:
+    http_proxy: "http://gateway:3128"
+  #
+  pre_tasks:
+    - setup:
+      when: ansible_env is not defined
+
+    - name: "This does not work."
+      ansible.builtin.debug: 
+        msg: "proxy is {{ lookup('ansible.builtin.env', 'http_proxy') }}"
+      ignore_errors: true
+
+    - name: "Retrieve env var"
+      ansible.builtin.debug: 
+        var: ansible_env['http_proxy']
+

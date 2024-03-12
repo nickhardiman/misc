@@ -1,0 +1,28 @@
+# Many options described here.
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html
+[Unit]
+Description=My service
+Wants=local-fs.target
+Requires=local-fs.target
+
+[Service]
+# Set environment variables.
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment
+Environment="ENVVAR=/var/tmp/thing"
+EnvironmentFile=-/etc/stuff/stuff.conf
+# simple, exec, forking, oneshot, dbus, notify, notify-reload, idle
+Type=simple
+User=myuser
+Group=mygroup
+TimeoutStartSec=0
+Restart=on-failure
+RestartSec=30s
+#ExecStartPre= 
+ExecStart=/usr/bin/my_daemon -a -b -c
+#ExecStop=
+PIDfile=/var/run/daemon.pid
+
+[Install]
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html#Mapping%20of%20unit%20properties%20to%20their%20inverses
+RequiredBy=basic.target
+WantedBy=basic.target

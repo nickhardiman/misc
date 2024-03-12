@@ -1,0 +1,33 @@
+---
+#
+- name: Run all Ansible roles for a host
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+  # nothing related to running ansible roles in redhat.satellite collection
+  # https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/?keywords=role
+
+    - name: Run Ansible roles
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/api/hosts/multiple_play_roles'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: POST
+        body: |
+          {
+              "host_ids": [ 24 ]
+          }
+        force_basic_auth: true
+        body_format: 'json'
+        status_code: 201
+      register: r_var_post
+
+    - name: Display
+      ansible.builtin.debug:
+        var: r_var_post
+        verbosity: 1

@@ -1,0 +1,25 @@
+---
+#
+- name: Associate an Ansible role with a hostgroup
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+    - name: "Associate ansible role with hostgroup"
+      redhat.satellite.hostgroup:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        name: '{{ host_group_name }}'
+        ansible_roles: 
+        - '{{ sat_scap_foreman_role_name }}'
+      register: r_hostgroup_associate
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: r_hostgroup_associate
+        verbosity: 1

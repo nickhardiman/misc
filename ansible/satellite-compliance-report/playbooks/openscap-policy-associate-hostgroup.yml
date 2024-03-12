@@ -1,0 +1,252 @@
+---
+#
+- name: Associate an OpenSCAP policy with a hostgroup
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+# no policy in
+# https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/
+
+# find the hostgroup ID
+    - name: Get Satellite resource info
+      redhat.satellite.resource_info:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        resource: hostgroups
+        search: 'name = {{ host_group_name }}'
+      register: r_hostgroup
+
+    - name: Ensure only one result is returned
+      ansible.builtin.assert:
+        that:
+              - r_hostgroup.resources is defined
+              - r_hostgroup.resources is not string
+              - r_hostgroup.resources is not mapping
+              - r_hostgroup.resources is iterable
+              - r_hostgroup.resources | length == 1
+              - r_hostgroup.resources[0].id is defined
+              - r_hostgroup.resources[0].id is number
+              - r_hostgroup.resources[0].id | string | int == r_hostgroup.resources[0].id | int
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: r_hostgroup
+        verbosity: 1
+
+    - name: record ID
+      ansible.builtin.set_fact:
+        host_group_id: "{{ r_hostgroup.resources[0].id }}"
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: host_group_id
+        verbosity: 1
+
+
+
+# find the policy ID
+    - name: Get Satellite resource info
+      redhat.satellite.resource_info:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        resource: policies
+        search: 'name = {{ policy_name }}'
+      register: r_policy
+
+    - name: Ensure only one result is returned
+      ansible.builtin.assert:
+        that:
+              - r_policy.resources is defined
+              - r_policy.resources is not string
+              - r_policy.resources is not mapping
+              - r_policy.resources is iterable
+              - r_policy.resources | length == 1
+              - r_policy.resources[0].id is defined
+              - r_policy.resources[0].id is number
+              - r_policy.resources[0].id | string | int == r_policy.resources[0].id | int
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: r_policy
+        verbosity: 1
+
+    - name: record ID
+      ansible.builtin.set_fact:
+        policy_id: "{{ r_policy.resources[0].id }}"
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: policy_id
+        verbosity: 1
+
+
+
+# associate hostgroup with policy
+    - name: Put association. 
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/api/compliance/policies/{{ policy_id }}'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: PUT
+        body: |
+          {
+            "policy": {
+              "name": "{{ policy_name }}",
+              "hostgroup_ids": [ {{ host_group_id }} ]
+            }
+          }
+        force_basic_auth: true
+        body_format: 'json'
+        #status_code: 201
+      register: r_var_post
+
+
+# module redhat.satellite.resource_info
+# https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/resource_info/
+# Satellite has over 100 resources to search.
+#
+# activation_keys
+# alternate_content_sources
+# alternate_content_sources_bulk_actions
+# ansible_collections
+# ansible_inventories
+# ansible_override_values
+# ansible_playbooks
+# ansible_roles
+# ansible_variables
+# architectures
+# arf_reports
+# audits
+# auth_source_externals
+# auth_source_internals
+# auth_source_ldaps
+# auth_sources
+# autosign
+# bookmarks
+# candlepin_dynflow_proxy
+# candlepin_proxies
+# capsule_content
+# capsules
+# common_parameters
+# compute_attributes
+# compute_profiles
+# compute_resources
+# config_reports
+# configs
+# content_credentials
+# content_export_incrementals
+# content_exports
+# content_imports
+# content_uploads
+# content_view_components
+# content_view_filter_rules
+# content_view_filters
+# content_view_histories
+# content_view_versions
+# content_views
+# dashboard
+# debs
+# discovered_hosts
+# discovery_rules
+# disks
+# docker_manifest_lists
+# docker_manifests
+# docker_tags
+# domains
+# errata
+# external_usergroups
+# fact_values
+# file_units
+# filters
+# foreign_input_sets
+# foreman_tasks
+# generic_content_units
+# home
+# host_collections
+# host_debs
+# host_errata
+# host_module_streams
+# host_packages
+# host_statuses
+# host_subscriptions
+# host_tracer
+# hostgroups
+# hosts
+# hosts_bulk_actions
+# http_proxies
+# images
+# instance_hosts
+# interfaces
+# inventory
+# job_invocations
+# job_templates
+# lifecycle_environments
+# locations
+# mail_notifications
+# media
+# models
+# module_streams
+# operatingsystems
+# organizations
+# os_default_templates
+# oval_contents
+# oval_policies
+# oval_reports
+# package_groups
+# packages
+# parameters
+# permissions
+# personal_access_tokens
+# ping
+# plugins
+# policies
+# preupgrade_reports
+# products
+# products_bulk_actions
+# provisioning_templates
+# ptables
+# realms
+# recurring_logics
+# registration
+# registration_commands
+# remote_execution_features
+# report_templates
+# repositories
+# repositories_bulk_actions
+# repository_sets
+# roles
+# scap_content_profiles
+# scap_contents
+# settings
+# simple_content_access
+# smart_proxies
+# smart_proxy_hosts
+# srpms
+# ssh_keys
+# subnet_disks
+# subnets
+# subscriptions
+# sync
+# sync_plans
+# table_preferences
+# tailoring_files
+# tasks
+# template_combinations
+# template_inputs
+# template_invocations
+# template_kinds
+# templates
+# upstream_subscriptions
+# usergroups
+# users
+# webhook_templates
+# webhooks

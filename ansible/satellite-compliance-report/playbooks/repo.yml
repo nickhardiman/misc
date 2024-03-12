@@ -1,0 +1,21 @@
+- name: Fetch information about Red Hat repositories
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Fetch information
+      redhat.satellite.repository_set_info:
+        server_url: https://satellite.build.example.com/
+        username: admin
+        password: Password;1
+        validate_certs: false
+        organization: Default Organization
+        #search: label = "ansible-automation-platform-2.4-for-rhel-8-x86_64-rpms"
+        search: product_name = "Red Hat Ansible Automation Platform"
+      register: repo_info
+
+    - name: Display information
+      debug:
+        var: repo_info
+

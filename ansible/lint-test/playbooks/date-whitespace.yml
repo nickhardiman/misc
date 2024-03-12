@@ -1,0 +1,28 @@
+---
+- name:          Display date with ansible_date_time
+  hosts:         localhost
+  gather_facts: true
+  tasks:
+
+    - name:      ISO
+      ansible.builtin.debug:
+        var:     ansible_date_time.iso8601
+
+    - name:      Date
+      ansible.builtin.debug:
+        var:     ansible_date_time.date
+
+- name:          Display date with Jinja2 now function
+  hosts:         localhost
+  gather_facts:  false
+  tasks:
+
+    - name:      Now function
+      ansible.builtin.debug:
+        var:     now()
+
+    - name:      Now function
+      ansible.builtin.debug:
+        var:     now(utc=true)
+...
+

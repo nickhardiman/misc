@@ -1,0 +1,20 @@
+---
+# find this on the web at
+# https://github.com/nickhardiman/junkyard/tree/main/ansible/satellite
+
+- name: Scan a host
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+    - name: Scan a host
+      redhat.satellite.job_invocation:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        search_query: "name ^ ({{ host_name }})"
+        job_template: "Run OpenSCAP scans"

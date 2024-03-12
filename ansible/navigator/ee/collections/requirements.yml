@@ -1,0 +1,14 @@
+---
+collections:
+  #- name: infra.ee_utilities
+  #- name: mynamespace.mycode
+  #  version: 1.0.0
+  - name: my_namespace.my_collection
+    version: 1.0.0
+    #source: https://aaphub.build.example.com/api/galaxy/content/published/
+    #source: https://aaphub.build.example.com/
+    #source: https://aaphub.build.example.com/api/galaxy/
+    #source: https://aaphub.build.example.com/api/galaxy/v3/
+    #source: https://admin:03efccc4c1c82181c843b3be1eff679aa4ca05e9@aaphub.build.example.com/api/galaxy/
+
+

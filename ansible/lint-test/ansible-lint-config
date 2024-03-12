@@ -1,0 +1,8 @@
+# https://ansible.readthedocs.io/projects/lint/configuring/#ansible-lint-configuration
+# copy to .ansible-lint
+
+offline: true
+
+#var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+var_naming_pattern: "^[A-Z][a-z0-9_]*$"
+

@@ -1,0 +1,15 @@
+---
+# run
+#   ansible-builder build -t my_new_ee -v 3
+# https://ansible.readthedocs.io/projects/builder/en/stable/
+#
+version: 1
+
+build_arg_defaults:
+  EE_BASE_IMAGE: 'registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest'
+
+dependencies:
+  galaxy: requirements.yml
+  python: requirements.txt
+  system: bindep.txt
+

@@ -1,0 +1,12 @@
+---
+- name: Use blocked modules
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Shell is not OK
+      ansible.builtin.shell:
+        cmd: echo Hi from shell
+    - name: Debug is OK
+      ansible.builtin.debug:
+        msg: Hi from debug
+...

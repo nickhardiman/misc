@@ -1,0 +1,39 @@
+- name: hosts from Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars:
+    sat_username: admin
+    sat_password: Password;1
+    satellite_fqdn: satellite.build.example.com
+    sat_server_url: "https://{{ satellite_fqdn }}"
+    satellite_validate_certs: true
+  tasks:
+
+  - name: Show all hosts
+    redhat.satellite.host_info:
+      username: "{{ sat_username }}"
+      password: "{{ sat_password }}"
+      server_url: "{{ sat_server_url }}"
+    register: r_hosts 
+
+  - name: Build list
+    ansible.builtin.set_fact: 
+      host_list: "{{ host_list | default([]) + [ item['name'] ]  }}"
+    loop: "{{ r_hosts['hosts'] }}"
+  - name: Display
+    ansible.builtin.debug:
+      msg: "host_list: {{ host_list }}"
+
+# use add_host to add to in-memory inventory
+
+- name: Check names
+  hosts: all
+  gather_facts: false
+  
+  tasks:
+
+  - name: Display
+    ansible.builtin.debug:
+      msg: "inventory_hostname: {{ inventory_hostname }}"
+    delegate_to: localhost
+    

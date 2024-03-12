@@ -1,0 +1,87 @@
+---
+- name: Override Ansible role variables
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+    # get variable IDs (mine are 116, 100)
+    # also see module 
+    # redhat.satellite.resource_info
+    #
+    - name: Get ID of variable
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/ansible/api/ansible_variables/?search=name={{ item.key }}'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: GET
+        force_basic_auth: true
+      register: r_var_id
+      loop: "{{ sat_scap_foreman_role_vars | dict2items }}"
+
+    - name: Display
+      ansible.builtin.debug:
+        var: item['json']['results'][0]['id']
+        verbosity: 1
+      loop: "{{ r_var_id['results'] }}"
+
+    # build a list of parameters and their IDs that looks like this
+    # "list_of_names_and_ids": [
+    #     {
+    #         "foreman_scap_client_fetch_remote_resources": 116
+    #     },
+    #     {
+    #         "foreman_scap_client_server": 100
+    #     }
+    # ]
+    - name: Create dict of names and IDs
+      ansible.builtin.set_fact:
+        dict_of_params: "{{ dict_of_params | default({}) | combine({ item['json']['results'][0]['parameter']: { 'id': item['json']['results'][0]['id'] }  }) }}"
+      loop: "{{ r_var_id['results'] }}"
+
+    - name: Display
+      ansible.builtin.debug:
+        var: dict_of_params
+        verbosity: 1
+
+    - name: Combine
+      ansible.builtin.set_fact:
+        dict_of_params: "{{ dict_of_params | ansible.builtin.combine( sat_scap_foreman_role_vars, list_merge='append', recursive=true ) }}"
+      loop: "{{ r_var_id['results'] }}"
+
+    - name: Display
+      ansible.builtin.debug:
+        var: dict_of_params
+        verbosity: 1
+
+# update values
+
+    # Filter dict2items rearranges each dict key/value to this.
+    # "item": {
+    #     "key": "foreman_scap_client_fetch_remote_resources",
+    #     "value": {
+    #         "id": 116,
+    #         "value": true
+    #     }
+    # }
+    #
+    - name: Override variable
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/ansible/api/ansible_variables/{{ item["value"]["id"]  }}'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: 'PUT'
+        body: '{ "default_value": "{{ item["value"]["value"] }}", "override": true }'
+        force_basic_auth: true
+        body_format: 'json'
+      loop: "{{ dict_of_params | ansible.builtin.dict2items }}"
+      register: r_var_put
+
+    - name: Display
+      ansible.builtin.debug:
+        var: r_var_put
+        verbosity: 1

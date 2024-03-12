@@ -1,0 +1,44 @@
+---
+- name: Create an OpenSCAP policy in Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+  # nothing related to policy in redhat.satellite collection
+  # https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/scap_content/?keywords=policy
+
+    - name: Post policy. Return status 422 probably means it already exists.
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/api/compliance/policies'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: POST
+        body: |
+          {
+            "organization_id": 1,
+            "policy": {
+              "name": "p-rhel9-ansible",
+              "description": "scan rhel 9 on the first of the month",
+              "scap_content_id": 5,
+              "scap_content_profile_id": 62,
+              "period": "monthly",
+              "day_of_month": 1,
+              "deploy_by": "ansible",
+              "location_ids": [ 2, 5 ]
+            }
+          }
+        force_basic_auth: true
+        body_format: 'json'
+        status_code: 201
+      register: r_var_post
+
+    - name: Display
+      ansible.builtin.debug:
+        var: r_var_post
+        verbosity: 1
+
+

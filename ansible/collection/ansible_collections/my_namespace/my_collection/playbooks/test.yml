@@ -1,0 +1,9 @@
+
+---
+- name: Say hello
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - name: my_namespace.my_collection.my_role
+

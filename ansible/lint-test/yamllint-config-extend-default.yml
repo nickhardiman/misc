@@ -1,0 +1,16 @@
+# https://yamllint.readthedocs.io/en/latest/configuration.html
+# An extension of the default configuration, with one change.
+# run
+#   yamllint -d ./yamllint-config-extend-default.yml ./date-before.yml 
+
+extends: default
+
+rules:
+  # change from default value
+  # empty-lines: disable
+  # to
+  empty-lines: disable
+  trailing-spaces: 
+    level: warning
+
+

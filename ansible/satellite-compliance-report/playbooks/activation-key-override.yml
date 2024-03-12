@@ -1,0 +1,22 @@
+---
+# https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/role/activation_keys/
+- name: Add a host to a hostgroup in Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+  roles:
+    - name: Override repository set in activation key
+      role: redhat.satellite.activation_keys
+      vars:
+        satellite_username: '{{ sat_username }}'
+        satellite_password: '{{ sat_password }}'
+        satellite_server_url: '{{ sat_server_url }}'
+        satellite_organization: '{{ sat_organization }}'
+        satellite_activation_keys:
+          - name: ak-build-aap-rhel-9
+            content_overrides:
+              - label: satellite-client-6-for-rhel-9-x86_64-rpms
+                override: enabled
+
+  # ??? if this does make changes, don't we have to unregister and register the host? 

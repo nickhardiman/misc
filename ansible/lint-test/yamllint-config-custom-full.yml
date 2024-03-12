@@ -1,0 +1,43 @@
+---
+# https://yamllint.readthedocs.io/en/latest/configuration.html
+# A copy of the default configuration, with one change.
+# run
+#   yamllint -c ./yamllint-config-custom-full.yml ./date-before.yml 
+
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+rules:
+  anchors: enable
+  braces: enable
+  brackets: enable
+  colons: enable
+  commas: enable
+  comments:
+    level: warning
+  comments-indentation:
+    level: warning
+  document-end: disable
+  document-start:
+    level: warning
+  # change from default value
+  # empty-lines: disable
+  # to
+  empty-lines: disable
+  empty-values: disable
+  float-values: disable
+  hyphens: enable
+  indentation: enable
+  key-duplicates: enable
+  key-ordering: disable
+  line-length: enable
+  new-line-at-end-of-file: enable
+  new-lines: enable
+  octal-values: disable
+  quoted-strings: disable
+  trailing-spaces: enable
+  truthy:
+    level: warning
+

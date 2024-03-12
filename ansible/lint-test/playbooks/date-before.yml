@@ -1,0 +1,19 @@
+---
+- name: Bla
+  hosts: localhost
+  gather_facts: yes 
+  tasks:
+  - debug: 
+      var: ansible_date_time.iso8601
+  - debug: 
+      var: ansible_date_time.date
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - debug: 
+      var: now()
+  - debug: 
+      var: now(utc=true) 
+...
+

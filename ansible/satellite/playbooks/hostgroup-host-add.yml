@@ -1,0 +1,95 @@
+---
+#
+- name: Add a host to a hostgroup in Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+  tasks:
+
+
+# CLI and hammer
+#
+# Find host ID
+# hammer host list
+# hammer host list --search=name=dev.build.example.com
+#
+# Find hostgroup ID 
+# hammer hostgroup list
+# hammer hostgroup list --search=name=hg-rhel-9
+#
+# associate host with hostgroup
+# hammer host update --hostgroup-title hg-rhel-9  --name dev.build.example.com
+# hammer host update --hostgroup-id 2 --id 23
+
+# API and curl
+# Use hammer --debug to see details of the HTTP conversation.
+#
+# Find host ID
+# ???
+# Find hostgroup ID 
+# ???
+# associate host with hostgroup
+#   curl \
+#     --request PUT \
+#     --header 'Content-Type: application/json' \
+#     --header "Accept: application/json" \
+#     --data '{
+#         "host": {
+#           "name": "dev.build.example.com",
+#           "hostgroup_id": 2,
+#           "content_facet_attributes": {},
+#           "subscription_facet_attributes": {}
+#         }
+#       }' \
+#     --user 'admin:Password;1' \
+#     'https://satellite.build.example.com//api/hosts/23' \
+#   | jq .
+
+
+# API and Ansible
+# https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/host/
+#
+
+    # Prepare a host for joining a hostgroup
+    # subnet of host and hostgroup must match.
+    # eg. for build, this is the subnet. 
+    #   "subnet_id": 1,
+    #   "subnet_name": "sn-build-subnet",
+    # otherwise this error appears.
+    #   Interfaces.subnet is not defined for host's location
+    # View this in the web UI at 
+    #   https://satellite.build.example.com/hosts/test.build.example.com/edit#interfaces
+    #
+    - name: "Set a subnet for a host"
+      redhat.satellite.host:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        name: '{{ host_name }}'
+        subnet: '{{ host_subnet }}'
+      register: r_subnet_set
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: r_subnet_set
+        verbosity: 1
+
+    # Join hostgroup
+    #
+    - name: "Add a host to a hostgroup"
+      redhat.satellite.host:
+        username: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        server_url: '{{ sat_server_url }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        name: '{{ host_name }}'
+        hostgroup: '{{ host_group_name }}'
+      register: r_hostgroup_add
+
+    - name: Display resources
+      ansible.builtin.debug:
+        var: r_hostgroup_add
+        verbosity: 1
+  

@@ -1,0 +1,18 @@
+= junked experiments from my home lab
+Nick Hardiman
+:source-highlighter: highlight.js
+:toc:
+:revdate: 20-02-2024
+
+== links
+
+home lab build playbooks 
+
+* https://github.com/nickhardiman/ansible-playbook-source
+* https://github.com/nickhardiman/ansible-playbook-build
+* https://github.com/nickhardiman/ansible-playbook-supply
+
+home lab articles
+
+* https://github.com/nickhardiman?tab=repositories&q=articles&type=&language=&sort=
+

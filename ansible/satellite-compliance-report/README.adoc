@@ -1,0 +1,958 @@
+= Satellite compliance reports
+Nick Hardiman
+:source-highlighter: highlight.js
+:toc:
+:revdate: 20-02-2024
+
+
+Incomplete, see ??? placeholders. Unchecked.
+A lot of these examples name my home lab Satellite _satellite.build.example.com_.
+
+== introduction
+
+Configure and run OpenSCAP compliance reports.
+
+
+== process summary and playbooks
+
+These are the steps required to set up compliance scanning and reporting, along with the names of example Ansible playbooks.
+
+=== configure Satellite for SCAP
+
+More work may be required. 
+On my machine, I could not add a host to a hostgroup before making sure the subnet used by the hostgroup interface was also assigned to host interface.
+I also had to go back and enable a repository in my activation key.
+The ansible role 
+
+. Load bundled SCAP content into Satellite  - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-content-add-bundle.yml[openscap-content-add-bundle.yml]
+. Load RHEL 9 SCAP content  - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-content-add-rhel9.yml[openscap-content-add-rhel9.yml]
+. Load Ansible role _theforeman.foreman_scap_client_ - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-add.yml[openscap-ansible-role-add.yml]
+. Override Ansible variables - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-vars.yml[openscap-ansible-role-vars.yml]
+. Create a compliance policy - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-policy-add.yml[openscap-policy-add.yml]
+
+=== configure Satellite for checking a managed host
+
+. Add host to hostgroup - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/hostgroup-host-add.yml[hostgroup-host-add.yml]
+. Associate the security policy with hostgroup  - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-policy-associate-hostgroup.yml[openscap-policy-associate-hostgroup.yml]
+. Associate the Ansible role with the host - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-associate.yml[openscap-ansible-role-associate.yml]
+. Check the activation key enables the Satellite client repository - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/activation-key-override.yml[activation-key-override.yml]
+
+=== configure a managed host
+
+. Run the Ansible role _theforeman.foreman_scap_client_ to prepare the managed host - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/ansible-role-play-hosts.yml[ansible-role-play-hosts.yml]
+
+=== create a report on the managed host
+
+. Run Ruby script _foreman_scap_client_ to scan, report and upload to Satellite - 
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-scan.yml[openscap-scan.yml]
+
+
+== there's more than one way to do it
+
+There are often four different ways to do the same job. 
+This page has info on the first three, repeated for each step. 
+The folder contains Ansible playbooks. 
+
+* use the web UI
+* use CLI and hammer
+* use CLI and curl
+* use Ansible
+
+=== web UI
+
+There are plenty of guides around the web showing you how to click your way around the Satellite web user interface.
+The web UI is good for learning, bad for automation.
+
+=== hammer 
+
+Hammer commands are below.
+The hammer command is good for sysadmins and not so intuitive for anyone else.
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/hammer_cli_guide/index[Hammer]
+uses Satellite's API.
+
+Use the hammer option "--debug" to find out how hammer talks HTTP to Satellite.
+
+=== curl 
+
+Curl commands are below.
+The curl command is good for debugging REST API calls.
+
+Use hammer's debug output to extract HTTP verbs, search strings, and JSON bodies.
+
+=== Ansible 
+
+The process is split into small Ansible playbooks.
+Ansible is good for automation.
+
+Playbooks are in the 
+https://github.com/nickhardiman/junkyard/tree/main/ansible/satellite-compliance-report/playbooks[playbooks] 
+directory.
+
+Run a playbook on the CLI.
+
+[source,shell]
+----
+ansible-playbook openscap-ansible-role-vars.yml
+----
+
+Run with extra output.
+Check out "verbosity" in each "ansible.builtin.debug" task.
+
+[source,shell]
+----
+ansible-playbook openscap-ansible-role-vars.yml -v
+----
+
+== an ARF report
+
+A scan report describes one host. 
+The report is stored in an ARF file 
+(Asset Reporting Format, https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/arf).
+
+A scan report is an XML file containing a huge amount of data.
+It can be viewed and read by a human, but it's difficult to understand the data structure and ridiculously long.
+The data structure is described in https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7694.pdf.
+
+Reports are stored on the Satellite file system in ``/var/lib/foreman-proxy/openscap/reports/arf/``.
+ARF reports are managed by pulp, which means they are stored with database keys as file names.
+Each file is compressed with bzip2.
+eg. 
+[source,shell]
+----
+[root@satellite.build.example.com ~]# cp /var/lib/foreman-proxy/openscap/reports/arf/1edd2c1d-ca30-4264-868d-bc610abe4922/18/1708806190/d0c042b8cf7fa206b769bff14a18275abd20213aa79cc6a646d7276e17eb11d9 /var/tmp/report.bz2
+[root@satellite.build.example.com ~]# bunzip2 /var/tmp/report.bz2 
+[root@satellite.build.example.com ~]# vim /var/tmp/report   
+<?xml version="1.0" encoding="UTF-8"?>
+<arf:asset-report-collection xmlns:arf="http://scap.nist.gov/schema/asset-reporting-format/1.1" xmlns:core="http://scap.nist.gov/schema/reporting-core/1.1" xmlns:ai="http://scap.nist.gov/schema/asset-identification/1.1">
+  <core:relationships xmlns:arfvocab="http://scap.nist.gov/specifications/arf/vocabulary/relationships/1.0#">
+...
+[root@satellite.build.example.com ~]# wc -l /var/tmp/report 
+590432 /var/tmp/report
+[root@satellite.build.example.com ~]# 
+----
+
+
+== one big report for many hosts
+
+??? 
+
+Not tried this 
+
+https://developers.redhat.com/articles/2024/02/08/how-visualize-your-openscap-compliance-reports
+
+https://github.com/jritter/SCAPinoculars
+
+
+
+== reference
+
+Ansible code based on the far superior
+https://github.com/sscheib/ansible_satellite/blob/main/20_satellite_openscap.yml
+
+Some playbooks use the Ansible redhat.satellite collection to talk to the Satellite API.
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/docs/
+
+Some playbooks use the Ansible ansible.builtin.uri module to talk to the Satellite API.
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html
+
+Satellite API guide
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/api_guide/index
+
+Satellite API resources on my machine
+https://satellite.build.example.com/apidoc/v2.html
+
+Ansible role _theforeman.foreman_scap_client_ prepares a managed host.
+https://github.com/theforeman/ansible-foreman_scap_client   
+
+Ruby script _/usr/bin/foreman_scap_client_ does the scanning and reporting.
+https://github.com/theforeman/foreman_scap_client
+
+My write-up should go here. Eventually. One day.
+https://github.com/nickhardiman/articles-satellite6/blob/main/modules/operate/pages/report-compliance.adoc
+
+
+
+
+== Load bundled SCAP content into Satellite
+
+=== use the web UI
+
+https://satellite.build.example.com/compliance/scap_contents
+
+=== use CLI and hammer
+
+[source,shell]
+----
+hammer scap-content bulk-upload --type default
+----
+
+=== use CLI and curl
+
+https://satellite.build.example.com/apidoc/v2/scap_contents/bulk_upload.en.html
+
+??? not tried
+
+[source,shell]
+----
+POST /api/v2/compliance/scap_contents/bulk_upload
+{
+'type': 'default'
+}
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-content-add-bundle.yml[openscap-content-add-bundle.yml]
+uses 
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+
+
+
+== Load RHEL 9 SCAP content
+
+=== grab ssg-rhel9-ds.xml
+
+Install on a RHEL 9 host.
+
+[source,shell]
+----
+yum install scap-security-guide scap-security-guide-doc
+----
+
+This provides some, but not all, files for scanning.
+Eg It does provide ssg-rhel9-ds.xml but it does not provide rhel-9.oval.xml.
+
+Missing files are downloaded by the oscap tool when you run ``oscap xccdf eval --fetch-remote-resources`` (or get Satellite to run it for you).
+The tool downloads  
+https://access.redhat.com/security/data/oval/v2/RHEL9/rhel-9.oval.xml.bz2.
+
+Check for missing files by running oscap info and looking for warnings.
+
+[source,shell]
+----
+[root@dev.build.example.com ~]# oscap info /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml 
+Document type: Source Data Stream
+Imported: 2023-12-07T13:36:15
+
+Stream: scap_org.open-scap_datastream_from_xccdf_ssg-rhel9-xccdf.xml
+Generated: (null)
+Version: 1.3
+Checklists:
+	Ref-Id: scap_org.open-scap_cref_ssg-rhel9-xccdf.xml
+WARNING: Datastream component 'scap_org.open-scap_cref_security-data-oval-v2-RHEL9-rhel-9.oval.xml.bz2' points out to the remote 'https://access.redhat.com/security/data/oval/v2/RHEL9/rhel-9.oval.xml.bz2'. Use '--fetch-remote-resources' option to download it.
+...
+----
+
+Grab ssg-rhel9-ds.xml.
+
+=== use the web UI
+
+https://satellite.build.example.com/compliance/scap_contents > Upload New SCAP Content
+
+=== use CLI and hammer
+
+[source,shell]
+----
+???
+----
+
+=== use CLI and curl
+
+https://satellite.build.example.com/apidoc/v2/scap_contents/bulk_upload.en.html
+
+[source,shell]
+----
+???
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-content-add-rhel9.yml[openscap-content-add-rhel9.yml]
+uses 
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/scap_content/[redhat.satellite.scap_content]
+
+
+== Load Ansible role _theforeman.foreman_scap_client_ 
+
+??? Copy to /usr/share/ansible/roles/theforeman.foreman_scap_client or /etc/ansible/roles/theforeman.foreman_scap_client?
+
+=== use the web UI
+
+https://satellite.build.example.com/ansible/ansible_roles
+
+=== use CLI and hammer
+
+[source,shell]
+----
+???
+hammer ansible role fetch --proxy-id 1
+hammer ansible role sync --proxy-id 1
+----
+
+=== use CLI and curl
+
+[source,shell]
+----
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-add.yml[openscap-ansible-role-add.yml]
+uses
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+
+
+
+== Override Ansible variables 
+
+change a variable's value
+Job is:
+
+* get the ID of variable "foreman_scap_client_fetch_remote_resources" (for me, this is 116)
+* update values
+
+=== use the web UI
+
+This is the way documented in Red Hat's product docs here.
+
+* https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/managing_security_compliance/index#inclusion-of-remote-scap-resources_security-compliance[Inclusion of Remote SCAP Resources]
+* https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/managing_configurations_using_ansible_integration_in_red_hat_satellite/index#Overriding_Ansible_Variables_in_satellite_ansible[Overriding Ansible Variables in Satellite]
+
+See this variable in Satellite's web UI here. 
+https://satellite.build.example.com/ansible/ansible_variables?search=foreman_scap_client_fetch_remote_resources&page=1
+
+=== use CLI and hammer
+
+CLI and hammer
+get variable ID (116)
+[source,shell]
+----
+  hammer ansible variables info --name foreman_scap_client_fetch_remote_resources
+----
+
+update values
+[source,shell]
+----
+  hammer ansible variables update --default-value true  --id 116 --override true
+----
+
+=== use CLI and curl
+
+API and curl
+reference: https://satellite.build.example.com/apidoc/v2/ansible_variables/index.en.html
+
+get variable ID (116)
+
+[source,shell]
+----
+  curl \
+    --request GET \
+    --user 'admin:Password;1' \
+    --header "Accept: application/json" \
+    'https://satellite.build.example.com/ansible/api/ansible_variables/?search=name=foreman_scap_client_fetch_remote_resources' \
+  | jq .results[0].id
+----
+
+update values
+[source,shell]
+----
+  curl \
+    --request PUT \
+    --header 'Content-Type: application/json' \
+    --header "Accept: application/json" \
+    --data '{ "default_value": "true", "override": true }' \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com/ansible/api/ansible_variables/116' \
+  | jq .
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-vars.yml[openscap-ansible-role-vars.yml]
+uses
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+
+
+
+
+
+== Create a compliance policy 
+
+=== use the web UI
+
+https://satellite.build.example.com/compliance/policies
+
+=== use CLI and hammer
+
+CLI and hammer
+Usually hammer can search to find the ID that matches a name.
+But this option
+  ``--scap-content-profile 'CIS Red Hat Enterprise Linux 9 Benchmark for Level 1 - Server'`` 
+causes error 
+  ``400 Bad Request Field 'name' not recognized for searching!``.
+
+find IDs
+[source,shell]
+----
+hammer organization list
+hammer location list
+hammer scap-content list
+hammer scap-content-profile list
+----
+
+create policy
+
+[source,shell]
+----
+hammer policy create \
+  --period monthly \
+  --day-of-month 1  \
+  --deploy-by ansible  \
+  --description 'scan rhel 9 on the first of the month' \
+  --scap-content 'Red Hat rhel9 default content'  \
+  --scap-content-profile-id 62 \
+  --name 'p-rhel9-ansible' \
+  --organization 'Default Organization' \
+  --locations 'Default Location,l-build'
+----
+
+=== use CLI and curl
+
+reference: 
+https://satellite.build.example.com/apidoc/v2/policies/create.en.html
+
+[source,shell]
+----
+  curl \
+    --request POST \
+    --header 'Content-Type: application/json' \
+    --header "Accept: application/json" \
+    --data '{
+        "organization_id": 1,
+        "policy": {
+          "name": "p-rhel9-ansible",
+          "description": "scan rhel 9 on the first of the month",
+          "scap_content_id": 5,
+          "scap_content_profile_id": 62,
+          "period": "monthly",
+          "day_of_month": 1,
+          "deploy_by": "ansible",
+          "location_ids": [  2,5 ]
+        }}' \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com/api/compliance/policies' \
+  | jq .
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-policy-add.yml[openscap-policy-add.yml]
+uses
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+
+
+
+
+== Add host to hostgroup
+
+=== use the web UI
+
+???
+
+=== use CLI and hammer
+
+Find host ID
+[source,shell]
+----
+hammer host list
+hammer host list --search=name=dev.build.example.com
+----
+
+Find hostgroup ID 
+[source,shell]
+----
+hammer hostgroup list
+hammer hostgroup list --search=name=hg-rhel-9
+----
+
+associate host with hostgroup
+[source,shell]
+----
+hammer host update --hostgroup-title hg-rhel-9  --name dev.build.example.com
+hammer host update --hostgroup-id 2 --id 23
+----
+
+=== use CLI and curl
+
+Find host ID
+[source,shell]
+----
+???
+----
+
+Find hostgroup ID 
+[source,shell]
+----
+???
+----
+
+associate host with hostgroup
+[source,shell]
+----
+  curl \
+    --request PUT \
+    --header 'Content-Type: application/json' \
+    --header "Accept: application/json" \
+    --data '{
+        "host": {
+          "name": "dev.build.example.com",
+          "hostgroup_id": 2,
+          "content_facet_attributes": {},
+          "subscription_facet_attributes": {}
+        }
+      }' \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com//api/hosts/23' \
+  | jq .
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/hostgroup-host-add.yml[hostgroup-host-add.yml]
+uses
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/host/[redhat.satellite.host]
+
+
+
+== Associate the security policy with hostgroup     
+
+=== use the web UI
+
+The web UI only shows a policy's hostgroups. 
+It does not show a policy's hosts. 
+
+https://satellite.build.example.com/compliance/policies/8/edit 
+
+Hosts > Compliance > Policies > p-rhel9-ansible > Host Groups
+
+=== use CLI and hammer
+
+Find the ID of a policy
+[source,shell]
+----
+hammer policy list
+hammer policy list --search=name=p-rhel9-ansible
+----
+
+Find the ID of a hostgroup
+[source,shell]
+----
+hammer hostgroup list
+hammer hostgroup list --search=name=hg-rhel-9
+----
+
+associate policy with a host
+[source,shell]
+----
+hammer policy update  --name 'p-rhel9-ansible'  --hosts dev.build.example.com 
+----
+
+associate policy with a hostgroup
+[source,shell]
+----
+hammer policy update  --name 'p-rhel9-ansible'  --hostgroups hg-rhel-9
+----
+
+
+=== use CLI and curl
+
+Find the host ID.
+This uses the search option ``GET /api/hosts?search=name=dev.build.example.com``.
+
+[source,shell]
+----
+  curl \
+    --request GET \
+    --header "Accept: application/json" \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com/api/hosts?search=name=dev.build.example.com' \
+  | jq .results[0].id
+----
+
+associate host with policy
+[source,shell]
+----
+  curl \
+    --request PUT \
+    --header 'Content-Type: application/json' \
+    --header "Accept: application/json" \
+    --data '{
+      "policy": {
+        "name": "p-rhel9-ansible",
+        "host_ids": [ 23 ]
+      }
+    }' \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com/api/compliance/policies/8' \
+  | jq .
+----
+
+find the hostgroup ID
+[source,shell]
+----
+    GET /api/hostgroups?search=name=hg-rhel-9
+----
+
+associate hostgroup with policy
+[source,shell]
+----
+  curl \
+    --request PUT \
+    --header 'Content-Type: application/json' \
+    --header "Accept: application/json" \
+    --data '{
+      "policy": {
+        "name": "p-rhel9-ansible",
+        "hostgroup_ids": [ 2 ]
+      }
+    }' \
+    --user 'admin:Password;1' \
+    'https://satellite.build.example.com/api/compliance/policies/8' \
+  | jq .
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-policy-associate-hostgroup.yml[openscap-policy-associate-hostgroup.yml]
+uses
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+and
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/resource_info/[redhat.satellite.resource_info]
+
+
+
+
+
+== Associate the Ansible role with the host 
+
+=== use the web UI
+
+https://satellite.build.example.com/hostgroups/2-hg-rhel-9/edit
+
+=== use CLI and hammer
+
+
+Find the ID of an ansible role
+[source,shell]
+----  hammer ansible role list
+  hammer ansible role list --search=name=theforeman.foreman_scap_client
+----
+
+Find the ID of a hostgroup
+[source,shell]
+----
+  hammer hostgroup list
+  hammer hostgroup list --search=name=hg-rhel-9
+----
+
+associate ansible role with a host
+doesn't update if the host already inherits the role from its hostgroup
+[source,shell]
+----
+  hammer host update --ansible-roles theforeman.foreman_scap_client --name dev.build.example.com
+----
+
+associate ansible role with a hostgroup
+[source,shell]
+----
+  hammer hostgroup update --ansible-roles theforeman.foreman_scap_client --name hg-rhel-9
+----
+
+=== use CLI and curl
+
+[source,shell]
+----
+PUT /api/hostgroups/2
+  {
+    "hostgroup": {
+        "name": "hg-rhel-9",
+        "ansible_role_ids": [ 51 ]
+    }
+  }
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-ansible-role-associate.yml[openscap-ansible-role-associate.yml] 
+uses 
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/hostgroup/[redhat.satellite.hostgroup].
+
+
+
+
+
+
+
+== Check the activation key enables the Satellite client repository 
+
+=== use the web UI
+
+=== use CLI and hammer
+
+[source,shell]
+----
+???
+hammer activation-key list --organization-id 1
+hammer activation-key content-override --id 6 --content-label "satellite-client-6-for-rhel-9-x86_64-rpms" --value true
+----
+
+=== use CLI and curl
+
+[source,shell]
+----
+???
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/activation-key-override.yml[activation-key-override.yml] 
+uses
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/role/activation_keys/
+[redhat.satellite.activation_keys]
+
+
+
+
+== Run the Ansible role _theforeman.foreman_scap_client_ to prepare the managed host 
+
+=== use the web UI
+
+https://satellite.build.example.com/hosts
+
+Hosts > All hosts > (tick a host) > Select Action > Run all Ansible roles
+
+=== use CLI and hammer
+
+run all ansible roles
+[source,shell]
+----
+hammer ansible roles play-hosts --hosts test.build.example.com
+----
+
+view result
+[source,shell]
+----
+hammer job-invocation output --host test.build.example.com --id 55
+----
+
+=== use CLI and curl
+
+https://satellite.build.example.com/apidoc/v2/hosts/multiple_play_roles.en.html
+
+[source,shell]
+----
+POST /api/hosts/multiple_play_roles
+{
+    "host_ids": [ 24 ]
+}
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/ansible-role-play-hosts.yml[ansible-role-play-hosts.yml]
+uses
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html[ansible.builtin.uri]
+
+
+
+
+== Run Ruby script _foreman_scap_client_ to scan, report and upload to Satellite    
+
+=== use the web UI
+
+List OpenSCAP job templates.
+
+https://satellite.build.example.com/job_templates/
+
+View OpenSCAP job template _Run OpenSCAP scans_.
+
+https://satellite.build.example.com/job_templates/203/edit
+
+Run an OpenSCAP scan.
+
+https://satellite.build.example.com/new/hosts/test.build.example.com#/Overview
+
+Hosts > All Hosts > (host) > Schedule a job > Run OpenSCAP scan
+
+view job output
+
+https://satellite.build.example.com/job_invocations/59
+
+https://satellite.build.example.com/template_invocations/132
+
+[source,shell]
+----
+  File /var/lib/openscap/content/2acd896e044e4352caa9ea3547243e18de9609dde6f63d179582a4b9808ac6c3.xml is missing. Downloading it from proxy.
+  Download SCAP content xml from: https://satellite.build.example.com:9090/compliance/policies/8/content/2acd896e044e4352caa9ea3547243e18de9609dde6f63d179582a4b9808ac6c3
+  DEBUG: running: oscap xccdf eval --fetch-remote-resources  --profile xccdf_org.ssgproject.content_profile_cis_server_l1  --results-arf /tmp/d20240224-20849-lyiybk/results.xml /var/lib/openscap/content/2acd896e044e4352caa9ea3547243e18de9609dde6f63d179582a4b9808ac6c3.xml
+  Downloading: https://access.redhat.com/security/data/oval/v2/RHEL9/rhel-9.oval.xml.bz2 ... ok
+  DEBUG: running: /usr/bin/env bzip2 /tmp/d20240224-21991-uwpzi6/results.xml
+  Uploading results to https://satellite.build.example.com:9090/compliance/arf/8
+  Report uploaded, report id: 18
+  Exit status: 0
+----
+
+view a scan job
+
+https://satellite.build.example.com/job_invocations/59
+
+List OpenSCAP scan reports.
+
+https://satellite.build.example.com/compliance/arf_reports
+
+view report
+
+https://satellite.build.example.com/compliance/arf_reports
+
+Hosts > Compliance > Reports > Full Report
+
+
+=== use CLI and hammer
+
+Hammer has a 
+https://github.com/theforeman/hammer_cli_foreman_remote_execution/blob/master/README.md[CLI Plugin for Foreman Remote Execution] which manages job runs.
+
+List templates
+
+[source,shell]
+----
+hammer job-template list
+----
+example
+[source,shell]
+----
+[root@satellite.build.example.com ~]# hammer job-template list 
+----|-----------------------------------------------------------|----------------------------|----------|-------------
+ID  | NAME                                                      | JOB CATEGORY               | PROVIDER | TYPE        
+----|-----------------------------------------------------------|----------------------------|----------|-------------
+...
+203 | Run OpenSCAP scans                                        | OpenSCAP                   | SSH      | job_template
+218 | Run OpenSCAP scans - Ansible Default                      | OpenSCAP Ansible Commands  | Ansible  | job_template
+204 | Run OVAL scans                                            | OpenSCAP                   | SSH      | job_template
+...
+[root@satellite.build.example.com ~]# 
+----
+
+View a template 
+
+[source,shell]
+----
+hammer job-template info --id 203
+----
+example
+[source,shell]
+----
+[root@satellite.build.example.com ~]# hammer job-template info --id 203
+ID:            203
+Name:          Run OpenSCAP scans
+Job Category:  OpenSCAP
+Provider:      SSH
+Type:          job_template
+Description:   
+    
+Inputs:        
+
+
+Locations:     
+    Default Location
+    l-build
+    l-source
+    l-supply
+Organisations: 
+    Default Organization
+
+[root@satellite.build.example.com ~]# 
+----
+
+Run an OpenSCAP scan. 
+The "~" tilde search query operator is described in 
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/administering_red_hat_satellite/searching_and_bookmarking_admin#Query_Operators_admin
+
+[source,shell]
+----
+hammer job-invocation create \
+  --job-template "Run OpenSCAP scans" \
+  --search-query "name ~ test.build.example.com"
+----
+
+view a scan job
+[source,shell]
+----
+hammer job-invocation output --id 59 --host test.build.example.com
+----
+
+list scan reports
+[source,shell]
+----
+hammer arf-report list
+----
+
+view a scan report 
+[source,shell]
+----
+hammer arf-report info --id 18
+----
+
+Turn an ARF file into a human-readable HTML page.
+[source,shell]
+----
+hammer arf-report download-html --id 18  --path /var/tmp/
+----
+
+
+
+=== use CLI and curl
+
+Execute 
+
+[source,shell]
+----
+POST /api/job_invocations
+    "job_invocation": {
+            "job_template_id": 203,
+                        "ssh": {},
+                 "recurrence": {},
+                 "scheduling": {},
+        "concurrency_control": {},
+               "search_query": "name ~ test.build.example.com",
+                    "ansible": {},
+                     "inputs": {},
+             "targeting_type": "static_query"
+    }
+----
+
+Poll 
+
+[source,shell]
+----
+GET /foreman_tasks/api/tasks/03afa831-1e96-4535-848f-0aca2efe32f6
+----
+
+=== use Ansible
+
+https://github.com/nickhardiman/junkyard/blob/main/ansible/satellite-compliance-report/playbooks/openscap-scan.yml[openscap-scan.yml] uses 
+https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/job_invocation/[redhat.satellite.job_invocation]
+
+
+

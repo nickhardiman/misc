@@ -1,0 +1,28 @@
+---
+- name: Add RHEL 9 OpenSCAP content to Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+# https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite/content/module/scap_content/
+    - name: Add more SCAP content
+      redhat.satellite.scap_content:
+        title: "Red Hat rhel9 default content"
+        scap_file: "files/ssg-rhel9-ds.xml"
+        original_filename: "ssg-rhel9-ds.xml"
+        organizations:
+          - "Default Organization"
+        locations:
+          - "Default Location"
+        server_url: "{{ sat_server_url }}"
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        state: present
+      register: r_scap_content_more
+
+    - name: Display reply
+      ansible.builtin.debug:
+        var: r_scap_content_more

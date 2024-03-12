@@ -1,0 +1,15 @@
+---
+# https://ansible.readthedocs.io/projects/lint/rules/var-naming/
+#
+- name: A few variable naming formats
+  hosts: localhost
+  gather_facts: yes
+  vars:
+    lowercase: hi
+    UPPERCASE: HI
+    snake_case: https://en.wikipedia.org/wiki/Snake_case
+    camelCase: https://en.wikipedia.org/wiki/Camel_case
+    UpperCamelCase: https://en.wikipedia.org/wiki/Camel_case
+    # Python doesn't like this.
+    # kebab-case: https://en.wikipedia.org/wiki/Letter_case#Kebab_case
+

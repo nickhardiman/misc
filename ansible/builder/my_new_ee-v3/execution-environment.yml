@@ -1,0 +1,29 @@
+---
+# run
+#   ansible-builder build -t my_new_ee -v 3
+# https://ansible.readthedocs.io/projects/builder/en/stable/
+#
+version: 3
+
+images:
+  base_image:
+    name: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
+
+options:
+  package_manager_path: /usr/bin/microdnf
+
+dependencies:
+  galaxy:
+    collections:
+      - name: ansible.posix
+      - name: community.crypto
+      - name: community.general
+      - name: community.libvirt
+      - name: containers.podman
+  python:
+    - cryptography
+  system:
+    - openssl [platform:rpm]
+    - bind-utils [platform:rhel-8 platform:rhel-9]
+
+

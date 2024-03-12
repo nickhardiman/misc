@@ -1,0 +1,31 @@
+---
+#
+- name: Run all Ansible roles for a host
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+# web UI
+# https://satellite.build.example.com/hosts
+# Hosts > All hosts > (tick a host) > Select Action > Run all Ansible roles
+
+# CLI and hammer
+# run all ansible roles
+# hammer ansible roles play-hosts --hosts test.build.example.com
+#
+# view result
+# hammer job-invocation output --host test.build.example.com --id 55
+
+# API and curl
+# https://satellite.build.example.com/apidoc/v2/hosts/multiple_play_roles.en.html
+#
+# POST /api/hosts/multiple_play_roles
+# {
+#     "host_ids": [ 24 ]
+# }
+
+
+# API and ansible

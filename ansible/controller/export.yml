@@ -1,0 +1,44 @@
+---
+# https://www.ansible.com/blog/automation-controller-workflow-deployment-as-code
+# upstream
+# https://docs.ansible.com/ansible/latest/collections/awx/awx/export_module.html
+# downstream
+# https://console.redhat.com/ansible/automation-hub/repo/published/ansible/controller/content/module/export/
+# 
+# prereqs
+# pip3 install awxkit
+# ansible-galaxy collection install ansible.controller
+
+- name: Export Workflow
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+    - ansible.controller
+
+  tasks:
+    - name: Export json
+      ansible.controller.export:
+        controller_host: https://aapcontrol.build.example.com
+        controller_username: admin
+        controller_password: 'Password;1'
+        validate_certs: false
+        # this doesnt work in ansible.controller v1.4 and earlier
+        job_templates: 
+            - "Demo Job Template"
+        # all takes a while, possibly
+        #  2 minutes for a mostly empty controller
+        # 20 minutes for a used controller
+        # all: true
+      register: r_export
+
+    - name: Display
+      ansible.builtin.debug:
+        var: r_export
+
+    - name: Export workflow job template to file
+      ansible.builtin.copy:
+        content: "{{ r_export | to_nice_yaml( width=50, explicit_start=True, explicit_end=True) }}"
+        dest: workflow.yaml
+...
+

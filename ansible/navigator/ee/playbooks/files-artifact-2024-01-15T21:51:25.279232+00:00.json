@@ -1,0 +1,361 @@
+{
+    "plays": [
+        {
+            "___progress": "100%",
+            "__changed": 1,
+            "__failed": 0,
+            "__ignored": 0,
+            "__in progress": 0,
+            "__ok": 2,
+            "__percent_complete": 100,
+            "__play_name": "localhost",
+            "__progress": "Complete",
+            "__skipped": 0,
+            "__task_count": 2,
+            "__unreachable": 0,
+            "name": "localhost",
+            "pattern": "localhost",
+            "play": "localhost",
+            "play_pattern": "localhost",
+            "play_uuid": "ce25772f-5386-3bdd-d48f-000000000001",
+            "playbook": "/home/nick/ansible/playbook/ee/playbooks/files.yml",
+            "playbook_uuid": "f574712b-0725-47c1-a693-a58024cec1ec",
+            "tasks": [
+                {
+                    "__changed": true,
+                    "__duration": "0s",
+                    "__host": "localhost",
+                    "__number": 0,
+                    "__result": "Ok",
+                    "__task": "Find",
+                    "__task_action": "ansible.builtin.shell",
+                    "duration": 0.303674,
+                    "end": "2024-01-15T21:51:24.858229",
+                    "event_loop": null,
+                    "host": "localhost",
+                    "play": "localhost",
+                    "play_pattern": "localhost",
+                    "play_uuid": "ce25772f-5386-3bdd-d48f-000000000001",
+                    "playbook": "/home/nick/ansible/playbook/ee/playbooks/files.yml",
+                    "playbook_uuid": "f574712b-0725-47c1-a693-a58024cec1ec",
+                    "remote_addr": "127.0.0.1",
+                    "res": {
+                        "_ansible_no_log": null,
+                        "changed": true,
+                        "cmd": "find /runner",
+                        "delta": "0:00:00.005023",
+                        "end": "2024-01-15 21:51:24.832615",
+                        "invocation": {
+                            "module_args": {
+                                "_raw_params": "find /runner",
+                                "_uses_shell": true,
+                                "argv": null,
+                                "chdir": null,
+                                "creates": null,
+                                "executable": null,
+                                "removes": null,
+                                "stdin": null,
+                                "stdin_add_newline": true,
+                                "strip_empty_ends": true
+                            }
+                        },
+                        "msg": "",
+                        "rc": 0,
+                        "start": "2024-01-15 21:51:24.827592",
+                        "stderr": "",
+                        "stderr_lines": [],
+                        "stdout": "/runner\n/runner/artifacts\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache\n/runner/project",
+                        "stdout_lines": [
+                            "/runner",
+                            "/runner/artifacts",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt",
+                            "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache",
+                            "/runner/project"
+                        ]
+                    },
+                    "resolved_action": "ansible.builtin.shell",
+                    "start": "2024-01-15T21:51:24.554555",
+                    "task": "Find",
+                    "task_action": "ansible.builtin.shell",
+                    "task_args": "",
+                    "task_path": "/home/nick/ansible/playbook/ee/playbooks/files.yml:4",
+                    "task_uuid": "ce25772f-5386-3bdd-d48f-000000000003",
+                    "uuid": "9f3f11f4-3c19-4a6d-83bb-202b57ef7cb5"
+                },
+                {
+                    "__changed": false,
+                    "__duration": "0s",
+                    "__host": "localhost",
+                    "__number": 1,
+                    "__result": "Ok",
+                    "__task": "Display",
+                    "__task_action": "ansible.builtin.debug",
+                    "duration": 0.01379,
+                    "end": "2024-01-15T21:51:24.879010",
+                    "event_loop": null,
+                    "host": "localhost",
+                    "play": "localhost",
+                    "play_pattern": "localhost",
+                    "play_uuid": "ce25772f-5386-3bdd-d48f-000000000001",
+                    "playbook": "/home/nick/ansible/playbook/ee/playbooks/files.yml",
+                    "playbook_uuid": "f574712b-0725-47c1-a693-a58024cec1ec",
+                    "remote_addr": "127.0.0.1",
+                    "res": {
+                        "_ansible_no_log": null,
+                        "_ansible_verbose_always": true,
+                        "changed": false,
+                        "r_find": {
+                            "changed": true,
+                            "cmd": "find /runner",
+                            "delta": "0:00:00.005023",
+                            "end": "2024-01-15 21:51:24.832615",
+                            "failed": false,
+                            "msg": "",
+                            "rc": 0,
+                            "start": "2024-01-15 21:51:24.827592",
+                            "stderr": "",
+                            "stderr_lines": [],
+                            "stdout": "/runner\n/runner/artifacts\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache\n/runner/project",
+                            "stdout_lines": [
+                                "/runner",
+                                "/runner/artifacts",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt",
+                                "/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache",
+                                "/runner/project"
+                            ]
+                        }
+                    },
+                    "resolved_action": "ansible.builtin.debug",
+                    "start": "2024-01-15T21:51:24.865220",
+                    "task": "Display",
+                    "task_action": "ansible.builtin.debug",
+                    "task_args": "",
+                    "task_path": "/home/nick/ansible/playbook/ee/playbooks/files.yml:8",
+                    "task_uuid": "ce25772f-5386-3bdd-d48f-000000000004",
+                    "uuid": "43eecac9-05b7-40e9-81fa-f4373a9f0307"
+                }
+            ],
+            "uuid": "ce25772f-5386-3bdd-d48f-000000000001"
+        }
+    ],
+    "settings_entries": {
+        "ansible-navigator": {
+            "ansible": {
+                "config": {
+                    "help": false
+                },
+                "doc": {
+                    "help": false,
+                    "plugin": {
+                        "type": "module"
+                    }
+                },
+                "inventory": {
+                    "help": false
+                },
+                "playbook": {
+                    "help": false,
+                    "path": "/home/nick/ansible/playbook/ee/playbooks/files.yml"
+                }
+            },
+            "ansible-builder": {
+                "help": false,
+                "workdir": "/home/nick/ansible/playbook"
+            },
+            "ansible-runner": {
+                "job-events": false
+            },
+            "app": "run",
+            "collection-doc-cache-path": "/home/nick/.cache/ansible-navigator/collection_doc_cache.db",
+            "color": {
+                "enable": true,
+                "osc4": true
+            },
+            "editor": {
+                "command": "vi +{line_number} {filename}",
+                "console": true
+            },
+            "enable-prompts": false,
+            "exec": {
+                "command": "/bin/bash",
+                "shell": true
+            },
+            "execution-environment": {
+                "container-engine": "podman",
+                "enabled": true,
+                "image": "registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8:latest",
+                "pull": {
+                    "policy": "tag"
+                }
+            },
+            "format": "yaml",
+            "images": {
+                "details": [
+                    "everything"
+                ]
+            },
+            "logging": {
+                "append": true,
+                "file": "/home/nick/ansible/playbook/ansible-navigator.log",
+                "level": "warning"
+            },
+            "mode": "interactive",
+            "playbook-artifact": {
+                "enable": true,
+                "save-as": "{playbook_dir}/{playbook_name}-artifact-{time_stamp}.json"
+            },
+            "settings": {
+                "effective": false,
+                "sample": false,
+                "schema": "json",
+                "sources": false
+            },
+            "time-zone": "UTC"
+        }
+    },
+    "settings_sources": {
+        "ansible-navigator.ansible-builder.help": "Defaults",
+        "ansible-navigator.ansible-builder.workdir": "Defaults",
+        "ansible-navigator.ansible-lint.config": "Not set",
+        "ansible-navigator.ansible-lint.lintables": "Not set",
+        "ansible-navigator.ansible-runner.artifact-dir": "Not set",
+        "ansible-navigator.ansible-runner.job-events": "Defaults",
+        "ansible-navigator.ansible-runner.rotate-artifacts-count": "Not set",
+        "ansible-navigator.ansible-runner.timeout": "Not set",
+        "ansible-navigator.ansible.cmdline": "Not set",
+        "ansible-navigator.ansible.config.help": "Defaults",
+        "ansible-navigator.ansible.config.path": "Not set",
+        "ansible-navigator.ansible.doc.help": "Defaults",
+        "ansible-navigator.ansible.doc.plugin.name": "Not set",
+        "ansible-navigator.ansible.doc.plugin.type": "Defaults",
+        "ansible-navigator.ansible.inventory.entries": "Not set",
+        "ansible-navigator.ansible.inventory.help": "Defaults",
+        "ansible-navigator.ansible.playbook.help": "Defaults",
+        "ansible-navigator.ansible.playbook.path": "Previous cli command",
+        "ansible-navigator.app": "Command line",
+        "ansible-navigator.collection-doc-cache-path": "Defaults",
+        "ansible-navigator.color.enable": "Defaults",
+        "ansible-navigator.color.osc4": "Defaults",
+        "ansible-navigator.editor.command": "Defaults",
+        "ansible-navigator.editor.console": "Defaults",
+        "ansible-navigator.enable-prompts": "Defaults",
+        "ansible-navigator.exec.command": "Defaults",
+        "ansible-navigator.exec.shell": "Defaults",
+        "ansible-navigator.execution-environment.container-engine": "Automatically determined",
+        "ansible-navigator.execution-environment.container-options": "Not set",
+        "ansible-navigator.execution-environment.enabled": "Defaults",
+        "ansible-navigator.execution-environment.environment-variables.pass": "Not set",
+        "ansible-navigator.execution-environment.environment-variables.set": "Not set",
+        "ansible-navigator.execution-environment.image": "Defaults",
+        "ansible-navigator.execution-environment.pull.arguments": "Not set",
+        "ansible-navigator.execution-environment.pull.policy": "Defaults",
+        "ansible-navigator.execution-environment.volume-mounts": "Not set",
+        "ansible-navigator.format": "Defaults",
+        "ansible-navigator.images.details": "Defaults",
+        "ansible-navigator.inventory-columns": "Not set",
+        "ansible-navigator.logging.append": "Defaults",
+        "ansible-navigator.logging.file": "Defaults",
+        "ansible-navigator.logging.level": "Defaults",
+        "ansible-navigator.mode": "Defaults",
+        "ansible-navigator.playbook-artifact.enable": "Defaults",
+        "ansible-navigator.playbook-artifact.replay": "Not set",
+        "ansible-navigator.playbook-artifact.save-as": "Defaults",
+        "ansible-navigator.settings.effective": "Defaults",
+        "ansible-navigator.settings.sample": "Defaults",
+        "ansible-navigator.settings.schema": "Defaults",
+        "ansible-navigator.settings.sources": "Defaults",
+        "ansible-navigator.time-zone": "Defaults",
+        "settings_file_path": "None",
+        "settings_file_source": "None"
+    },
+    "status": "successful",
+    "status_color": 10,
+    "stdout": [
+        "\u001b[1;35m[WARNING]: provided hosts list is empty, only localhost is available. Note that\u001b[0m",
+        "\u001b[1;35mthe implicit localhost does not match 'all'\u001b[0m",
+        "",
+        "PLAY [localhost] ***************************************************************",
+        "",
+        "TASK [Find] ********************************************************************",
+        "Monday 15 January 2024  21:51:24 +0000 (0:00:00.018)       0:00:00.018 ******** ",
+        "\u001b[0;33mchanged: [localhost]\u001b[0m",
+        "",
+        "TASK [Display] *****************************************************************",
+        "Monday 15 January 2024  21:51:24 +0000 (0:00:00.310)       0:00:00.329 ******** ",
+        "\u001b[0;32mok: [localhost] => {\u001b[0m",
+        "\u001b[0;32m    \"r_find\": {\u001b[0m",
+        "\u001b[0;32m        \"changed\": true,\u001b[0m",
+        "\u001b[0;32m        \"cmd\": \"find /runner\",\u001b[0m",
+        "\u001b[0;32m        \"delta\": \"0:00:00.005023\",\u001b[0m",
+        "\u001b[0;32m        \"end\": \"2024-01-15 21:51:24.832615\",\u001b[0m",
+        "\u001b[0;32m        \"failed\": false,\u001b[0m",
+        "\u001b[0;32m        \"msg\": \"\",\u001b[0m",
+        "\u001b[0;32m        \"rc\": 0,\u001b[0m",
+        "\u001b[0;32m        \"start\": \"2024-01-15 21:51:24.827592\",\u001b[0m",
+        "\u001b[0;32m        \"stderr\": \"\",\u001b[0m",
+        "\u001b[0;32m        \"stderr_lines\": [],\u001b[0m",
+        "\u001b[0;32m        \"stdout\": \"/runner\\n/runner/artifacts\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt\\n/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache\\n/runner/project\",\u001b[0m",
+        "\u001b[0;32m        \"stdout_lines\": [\u001b[0m",
+        "\u001b[0;32m            \"/runner\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__init__.py\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.opt-1.pyc\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/__init__.cpython-39.pyc\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.opt-1.pyc\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/__pycache__/awx_display.cpython-39.pyc\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/callback/awx_display.py\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/job_events\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/command\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stdout\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/stderr\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/env.list\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/collections.json\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/ansible_version.txt\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/artifacts/3c622c48-d37c-45b0-ba78-ae08704acf16/fact_cache\",\u001b[0m",
+        "\u001b[0;32m            \"/runner/project\"\u001b[0m",
+        "\u001b[0;32m        ]\u001b[0m",
+        "\u001b[0;32m    }\u001b[0m",
+        "\u001b[0;32m}\u001b[0m",
+        "",
+        "PLAY RECAP *********************************************************************",
+        "\u001b[0;33mlocalhost\u001b[0m                  : \u001b[0;32mok=2   \u001b[0m \u001b[0;33mchanged=1   \u001b[0m unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   ",
+        "Monday 15 January 2024  21:51:24 +0000 (0:00:00.027)       0:00:00.357 ******** ",
+        "=============================================================================== ",
+        "Find -------------------------------------------------------------------- 0.31s",
+        "Display ----------------------------------------------------------------- 0.03s"
+    ],
+    "version": "2.0.0"
+}

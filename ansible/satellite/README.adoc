@@ -1,0 +1,8 @@
+= Satellite and thing
+Nick Hardiman
+:source-highlighter: highlight.js
+:toc:
+:revdate: 20-02-2024
+
+
+Satellite stuff

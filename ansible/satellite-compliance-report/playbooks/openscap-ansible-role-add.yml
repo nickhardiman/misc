@@ -1,0 +1,52 @@
+---
+- name: Add an Ansible role to Red Hat Satellite
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - openscap-vars.yml
+
+  tasks:
+
+    - name: 'Enable Foreman OpenSCAP Ansible role: {{ sat_scap_foreman_role_name }}'
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/ansible/api/ansible_roles/sync'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: 'PUT'
+        body: |
+          {{
+            {
+              'proxy_id': 1,
+              'role_names': [
+                sat_scap_foreman_role_name
+              ]
+            }
+
+          }}
+        force_basic_auth: true
+        body_format: 'json'
+
+    # "~" (tilde) operator
+    # This jinja2 "~" binary infix operator joins operands as strings.
+    # https://jinja.palletsprojects.com/en/3.0.x/templates/#other-operators
+    # It is not the Satellite "~" search query operator
+    # https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/administering_red_hat_satellite/searching_and_bookmarking_admin#Query_Operators_admin
+
+    - name: 'Ensure OpenSCAP role is available in Satellite'
+      ansible.builtin.uri:
+        url: '{{ sat_server_url }}/ansible/api/ansible_roles'
+        user: '{{ sat_username }}'
+        password: '{{ sat_password }}'
+        validate_certs: '{{ satellite_validate_certs }}'
+        method: 'GET'
+        body: |
+          {{
+            {
+              'search': 'name = ' ~ sat_scap_foreman_role_name
+            }
+          }}
+        force_basic_auth: true
+        body_format: 'json'
+      register: '__t_roles'
+      until: __t_roles.json.results | selectattr('name', 'match', sat_scap_foreman_role_name) | length == 1

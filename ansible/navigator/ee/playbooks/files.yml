@@ -1,0 +1,11 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Find
+    ansible.builtin.shell:
+      cmd: find /runner
+    register: r_find
+  - name: Display
+    ansible.builtin.debug:
+      var: r_find
+

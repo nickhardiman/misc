@@ -1,0 +1,22 @@
+[defaults]
+
+# https://www.redhat.com/sysadmin/get-started-private-automation-hub
+#
+# check 
+# see 
+# https://access.redhat.com/solutions/7037370
+# Using cURL to manage a collection to the Private Automation Hub via the REST API
+# curl --verbose 'https://admin:Password;1@aaphub.build.example.com/api/galaxy/v3/plugin/ansible/content/published/collections/index/mynamespace/mycode/' | jq .
+#
+[galaxy]
+server_list = published, private_hub_repo_validated
+
+[galaxy_server.published]
+url=https://aaphub.build.example.com/api/galaxy/
+token=03efccc4c1c82181c843b3be1eff679aa4ca05e9
+
+
+[galaxy_server.private_hub_repo_validated]
+url=https://aaphub.build.example.com/api/galaxy/content/validated/ 
+token=03efccc4c1c82181c843b3be1eff679aa4ca05e9
+
