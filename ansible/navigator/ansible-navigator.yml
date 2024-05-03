@@ -1,0 +1,21 @@
+# https://ansible-navigator.readthedocs.io/en/latest/settings/
+---
+ansible-navigator:
+  ansible:
+    config:
+      path: ./ansible.cfg
+  execution-environment:
+    environment-variables:
+      set:
+        ANSIBLE_PIPELINING: true
+    image: hub1.lab.example.com/my_new_ee:latest
+    #image: ee-supported-rhel8:latest
+    pull:
+      policy: missing
+    volume-mounts:
+       - src: "/home/nick/.ssh/ansible-key.priv"
+         dest: "/home/nick/.ssh/ansible-key.priv"
+         options: "Z"
+  playbook-artifact:
+    enable: false
+  mode: stdout
