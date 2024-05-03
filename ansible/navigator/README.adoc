@@ -1,0 +1,23 @@
+----
+podman login -u nick registry.redhat.io
+----
+----
+ansible-navigator  --mode=stdout config dump
+----
+----
+ansible-navigator  --mode=stdout settings
+----
+reset colors
+----
+tput init 
+----
+----
+ansible-navigator doc --help
+ansible-navigator doc redhat.satellite.bookmark  --mode stdout
+ansible-navigator doc -t callback  -l -m stdout
+ansible-navigator doc -t inventory -l -m stdout
+----
+----
+ansible-navigator inventory --mode stdout   --pull-policy missing  -i inventory.ini --list --yaml
+ansible-navigator inventory --mode stdout   --pull-policy missing  -i inventory.ini --graph
+----
