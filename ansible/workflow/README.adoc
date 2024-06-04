@@ -1,0 +1,18 @@
+
+== reference 
+
+blog
+https://www.redhat.com/sysadmin/ansible-workflow-job-templates
+
+product doc
+https://docs.ansible.com/automation-controller/latest/html/userguide/workflow_templates.html
+
+== ideas
+
+Perhaps make a couple real workflows
+
+* install a distributed app, with load balancer, database and two servers
+* update the app, one server at a time
+
+haproxy has an API for disabling and enabling servers
+https://www.haproxy.com/documentation/haproxy-runtime-api/reference/disable-server/
