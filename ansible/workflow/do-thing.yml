@@ -1,0 +1,10 @@
+---
+# This playbook prints a simple debug message
+- name: Do a thing
+  hosts: all
+
+  tasks:
+    - name: Print debug message
+      ansible.builtin.debug:
+        msg: Do a thing
+...
