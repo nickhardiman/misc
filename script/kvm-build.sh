@@ -40,11 +40,13 @@ virt-resize $VIRT_RESIZE_OPTIONS
 # cloud-init package installed in rhel7 image, but not 8
 # harmless for rhel8 
 virt-customize \
-  --add           $POOL_DIR/$IMAGE \
-  --root-password password:'Password;1' \
-  --uninstall     cloud-init  \
-  --hostname      $HOST.$IF1_DOMAIN \
-  --timezone      'Europe/London' \
+  --add            $POOL_DIR/$IMAGE \
+  --root-password  password:'Password;1' \
+  --hostname       $HOST.$IF1_DOMAIN \
+  --timezone       'Europe/London' \
+  --uninstall      cloud-init  \
+  --uninstall      initial-setup  \
+  --ssh-inject     'root:string:ssh-rsa ABCDB3NzaC1yc2EAAAADAQABAAABgQDS9WOAwF/q1dKoHt+CqI1HTmEUNseC/fn3eiDBK/fd3MufeXSBuZzh/jSvM1fV5sCygGm+eblteu6EyCW9ozllsv4tB5SgPzDiiz3DqP4hHqpQ6Vr/2UAPx+549RZ/n/hij6DB15s/IzXvzId4yZTOchsmKUASFsHgfFEXGl77RfH1eEUxcTQ+mte5Uv7DXFt7gk5t9aB40yRGIwYACxesZvjrdcxPiWSvjFt345mYkbYlmsdHEr/zNVhrgV4msD7TedFzDg6NZ85Fze+C2lqKLd/O9BBpVkKkiALQaIHqMotysldAr+IjCj9xC8yqiFfb3ll+ra089JWeIbj83qcUHDUGHdxr8u4J6/zURlJSaGnlt2mVo6kN8KAYTR92B2d0VYBjTngzeo7Rciqw5pZXWm1pwFSBxhaYzeEoHshCxa0PN+D0H1IzVPveqK/pPNoF7AVBhccRoCOx24pU7DGC/gJo6RM52yDgofnr2i2oSjB8ZsJ0WFb2Gq36mrefgh= root@rpi4.lab.example.com'  \
   --selinux-relabel
   
 
