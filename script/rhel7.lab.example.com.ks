@@ -35,20 +35,20 @@ network  --hostname=rhel7.lab.example.com
 eula --agreed
 
 # accounts
-# from the Ansible vault
 # These commands set up password-based login.
 # To create an encrypted password, try this. 
+#   Start with a plaintext password, like 'Password;1' (don't use this verbatim)
 #   Generate a salt. This command displays 16 printable characters.
 #     cat /dev/urandom | tr -dc 'A-Za-z0-9.\_\-+'  | head -c 16
-#   Pick a password.
-#   Replace 'G3GIlnUH.JqcrAQl' and 'Password;1' with the new salt and password.
-#   Run.
+#   Run this command, but 
+#   first replace 'G3GIlnUH.JqcrAQl' and 'Password;1' with the new salt and password.
 #     /usr/bin/openssl passwd  -6 --salt='G3GIlnUH.JqcrAQl' 'Password;1'
 # For key-based login, check out 'sshkey --username=user "ssh_key"'.
 # For changing a password in the "post" section, try one of these.
 #   echo "ansible_user:Password;1" | chpasswd
 #   echo "Password;1" | passwd --stdin ansible_user
 #
+# !!! can I add '# notsecret' to the ends of these lines
 rootpw                                  --iscrypted "$6$G3GIlnUH.JqcrAQl$I.q7gGoT37tcNnrGiHkeUTBtr8AAuoM/yy3P3FuEpJaSun6clgR8GlvKIbqOTgqNe.fIBV6xZOPiWvsduhXeC/"
 user --groups=wheel --name=nick          --password="$6$G3GIlnUH.JqcrAQl$I.q7gGoT37tcNnrGiHkeUTBtr8AAuoM/yy3P3FuEpJaSun6clgR8GlvKIbqOTgqNe.fIBV6xZOPiWvsduhXeC/" --iscrypted --gecos=nick
 user --groups=wheel --name=ansible_user  --password="$6$G3GIlnUH.JqcrAQl$I.q7gGoT37tcNnrGiHkeUTBtr8AAuoM/yy3P3FuEpJaSun6clgR8GlvKIbqOTgqNe.fIBV6xZOPiWvsduhXeC/" --iscrypted --gecos=ansible_user
