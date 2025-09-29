@@ -1,0 +1,5 @@
+.password
+ansible.cfg
+ansible-navigator.log
+*.json
+.DS_Store

@@ -1,0 +1,20 @@
+
+For more information, see 
+
+gitattributes
+https://git-scm.com/docs/gitattributes
+
+gitignore
+https://git-scm.com/docs/gitignore
+https://docs.github.com/en/get-started/git-basics/ignoring-files
+https://github.com/github/gitignore
+https://www.toptal.com/developers/gitignore/
+
+gitleaks
+https://github.com/gitleaks/gitleaks	
+https://www.jit.io/resources/appsec-tools/the-developers-guide-to-using-gitleaks-to-detect-hardcoded-secrets
+
+pre-commit
+https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
+https://github.com/nickhardiman/misc/tree/main/ansible/pre-commit
+https://pre-commit.com/
