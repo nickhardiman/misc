@@ -42,7 +42,7 @@ show_pv_segments() {
 
 # Set variables LVM2_PVSEG_START and LVM2_PVSEG_SIZE using the pvs command. 
 find_first_free_segment() {
-    pvsargs="--noheadings --namepefixes --segments -o pvseg_start,pvseg_size,segtype"
+    pvsargs="--noheadings --nameprefixes --segments -o pvseg_start,pvseg_size,segtype"
     LVM2_PVSEG_START=
     eval $(pvs "$PVDEV" $pvsargs | grep SEGTYPE=.free. | head -n1)
     if [ -z "$LVM2_PVSEG_START" ]; then
@@ -57,7 +57,7 @@ find_first_free_segment() {
 }
 
 find_last_linear_segment() {
-    pvsargs="--noheadings --namepefixes --segments -o pvseg_start,pvseg_size,segtype"
+    pvsargs="--noheadings --nameprefixes --segments -o pvseg_start,pvseg_size,segtype"
     LVM2_PVSEG_START=
     eval $(pvs "$PVDEV" $pvsargs | grep SEGTYPE=.linear. | tail -n1)
     if [ -z "$LVM2_PVSEG_START" ]; then
@@ -74,10 +74,10 @@ find_last_linear_segment() {
 all_free_space_at_end() {
     if [[ $free_start -gt $last_pv_start ]]
     then
-        echo 'all free space is after linear PEs'
+        [[ "$VERBOSE" -eq 0 ]] && echo 'all free space is after linear PEs'
         /usr/bin/true
     else
-        echo 'some free space is not after linear PEs'
+        [[ "$VERBOSE" -eq 0 ]] && echo 'some free space is not after linear PEs'
         /usr/bin/false
     fi
 }
@@ -157,9 +157,6 @@ while true; do
     find_first_free_segment
     find_last_linear_segment
     if all_free_space_at_end; then
-        if [ $MOVE_COUNT -eq 0 ]; then
-            echo "Nothing to do, all free space is at the end of $PVDEV"
-        fi 
         break
     fi
     pick_range_to_move
